@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  test-unit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,33 +31,45 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test with coverage (fails if < 70%)
-        run: npm run test:ci
-      
-      - name: E2E Test with playwright
-        run: npm run test:e2e
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - name: Unit tests with coverage
+        run: npm run test:unit
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          name: playwright-report
-          path: playwright-report/
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: E2E tests
+        run: npm run test:e2e
 
   open-pr:
-    needs: test
+    needs: [test-unit, test-e2e]
     runs-on: ubuntu-latest
-    if: ${{ needs.test.result == 'success' }}
+    if: ${{ needs.test-unit.result == 'success' && needs.test-e2e.result == 'success' }}
     steps:
       - name: Open PR dev -> main if not exists
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.PAT_POKE }}
+          github-token: ${{ secrets.PAT_TOKEN }}
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const head = 'dev';
             const base = 'main';
 
-            // Check if there's already an open PR from dev to main
             const prs = await github.rest.pulls.list({
               owner, repo, state: 'open', head: `${owner}:${head}`, base
             });
@@ -70,6 +82,6 @@ jobs:
               owner, repo,
               title: 'Promote dev to main',
               head, base,
-              body: 'Automated PR: tests passed and coverage >= 70%.'
+              body: 'Automated PR: unit tests, E2E tests passed and coverage >= 70%.'
             });
             core.info(`PR created: ${pr.data.html_url}`);
