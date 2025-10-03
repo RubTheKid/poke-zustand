@@ -5,6 +5,7 @@ export default defineConfig({
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./src/test/setupTest.ts'],
+        exclude: ['**/node_modules/**', '**/dist/**', '**/e2e/**', '**/*.e2e.spec.ts'],
         coverage: {
             provider: 'v8', // usa c8
             reporter: ['text', 'lcov'],
@@ -15,6 +16,7 @@ export default defineConfig({
                 'src/**/__tests__/**',
                 'src/test/**',
                 '**/*.d.ts',
+                '**/e2e/**',
             ],
             thresholds: {
                 statements: 70,
