@@ -1,4 +1,5 @@
-import { getPokemons } from '../api/pokeApi'
+import { getJson } from './client'
+import { getPokemons } from './pokeApi'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('getPokemons', () => {
@@ -31,4 +32,20 @@ describe('getPokemons', () => {
         vi.spyOn(global, 'fetch').mockResolvedValueOnce(badResponse)
         await expect(getPokemons(1)).rejects.toThrow()
     })
+
+    it('getJson retorna dados quando resposta é ok', async () => {
+        const mockData = { name: 'bulbasaur', id: 1 }
+        const mockResponse = new Response(JSON.stringify(mockData), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        })
+
+        vi.spyOn(global, 'fetch').mockResolvedValueOnce(mockResponse)
+
+        const result = await getJson('/pokemon/1')
+
+        expect(result).toEqual(mockData)
+        expect(fetch).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon/1')
+    })
+
 })

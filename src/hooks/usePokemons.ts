@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Pokemon } from "../store/favorites";
-import { getPokemons } from "../api/pokeApi";
+import { listPokemons } from "../api/endpoints";
 
 export function usePokemons(limit: number) {
     const [pokemons, setPokemons] = useState<Pokemon[]>([]);
@@ -10,7 +10,7 @@ export function usePokemons(limit: number) {
     useEffect(() => {
         let active = true
         setLoading(true)
-        getPokemons(limit)
+        listPokemons(limit)
             .then((list) => { if (active) { setPokemons(list); setError(null) } })
             .catch((err) => { if (active) { setError(err) } })
             .finally(() => { if (active) { setLoading(false) } })
