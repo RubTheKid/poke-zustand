@@ -24,7 +24,7 @@ describe('App', () => {
     })
 
     render(<App />)
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
+    expect(screen.getByText('Loading Pokémon...')).toBeInTheDocument()
   })
 
   it('renderiza lista quando carregada', () => {
@@ -39,7 +39,8 @@ describe('App', () => {
     })
 
     render(<App />)
-    expect(screen.getByText('App')).toBeInTheDocument()
+    expect(screen.getByText('PokéDex')).toBeInTheDocument()
+    expect(screen.getByText('Gotta catch \'em all!')).toBeInTheDocument()
     expect(screen.getByText('bulbasaur')).toBeInTheDocument()
     expect(screen.getByText('ivysaur')).toBeInTheDocument()
   })
@@ -65,6 +66,8 @@ describe('App', () => {
     })
 
     render(<App />)
-    expect(screen.getByText(/Error: API Error/)).toBeInTheDocument()
+    expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument()
+    expect(screen.getByText('API Error')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Try Again' })).toBeInTheDocument()
   })
 })

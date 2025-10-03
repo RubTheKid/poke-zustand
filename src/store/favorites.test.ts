@@ -4,19 +4,25 @@ import { useFavoritesStore } from './favorites'
 
 describe('favorites store', () => {
     beforeEach(() => {
-        useFavoritesStore.setState({ favorites: {} })
+        useFavoritesStore.setState({ favorites: {}, favoritesList: [] })
     })
 
     it('toggle adiciona e remove favoritos', () => {
         const p = { id: 1, name: 'bulbasaur', image: 'img' }
-        const { toggleFavorite, isFavorite, favoritesList } = useFavoritesStore.getState()
+        const { toggleFavorite } = useFavoritesStore.getState()
 
         act(() => toggleFavorite(p))
-        expect(isFavorite(1)).toBe(true)
-        expect(favoritesList()).toHaveLength(1)
+
+        //verificar estado após a ação
+        const stateAfterAdd = useFavoritesStore.getState()
+        expect(stateAfterAdd.isFavorite(1)).toBe(true)
+        expect(stateAfterAdd.favoritesList).toHaveLength(1)
 
         act(() => toggleFavorite(p))
-        expect(isFavorite(1)).toBe(false)
-        expect(favoritesList()).toHaveLength(0)
+
+        //vrificar estado após remoção
+        const stateAfterRemove = useFavoritesStore.getState()
+        expect(stateAfterRemove.isFavorite(1)).toBe(false)
+        expect(stateAfterRemove.favoritesList).toHaveLength(0)
     })
 })
