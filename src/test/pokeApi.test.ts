@@ -13,10 +13,11 @@ describe('getPokemons', () => {
                 { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
             ],
         }
-        vi.spyOn(global, 'fetch').mockResolvedValueOnce({
-            ok: true,
-            json: async () => fakeJson,
-        } as any)
+        const okResponse = new Response(JSON.stringify(fakeJson), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        })
+        vi.spyOn(global, 'fetch').mockResolvedValueOnce(okResponse)
 
         const list = await getPokemons(2)
         expect(list).toEqual([
@@ -26,7 +27,8 @@ describe('getPokemons', () => {
     })
 
     it('lança erro quando resposta não ok', async () => {
-        vi.spyOn(global, 'fetch').mockResolvedValueOnce({ ok: false, status: 500 } as any)
+        const badResponse = new Response(null, { status: 500 })
+        vi.spyOn(global, 'fetch').mockResolvedValueOnce(badResponse)
         await expect(getPokemons(1)).rejects.toThrow()
     })
 })
