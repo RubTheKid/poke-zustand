@@ -1,7 +1,15 @@
-export default function PokemonCard() {
+import type { Pokemon } from "../store/favorites"
+
+type Props = {
+    pokemon: Pokemon
+}
+
+export default function PokemonCard({ pokemon }: Props) {
     return (
         <div>
-            <h1>PokemonCard</h1>
+            <img src={pokemon.image} alt={pokemon.name} />
+            <h1>{pokemon.name}</h1>
+            <button>Add to favorites</button>
         </div>
     )
 }
