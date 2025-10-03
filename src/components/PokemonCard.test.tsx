@@ -1,10 +1,7 @@
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import PokemonCard from './PokemonCard'
-import { useFavoritesStore } from '../store/favorites'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
-// Mock da store
 vi.mock('../store/favorites', () => ({
   useFavoritesStore: vi.fn(),
 }))
