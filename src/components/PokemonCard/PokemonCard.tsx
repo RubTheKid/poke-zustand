@@ -11,13 +11,14 @@ export default function PokemonCard({ pokemon }: Props) {
     const fav = isFavorite(pokemon.id)
 
     return (
-        <div className="card">
-            <img src={pokemon.image} alt={pokemon.name} className="card-img" />
-            <h3 className="card-title">{pokemon.name}</h3>
+        <div className="card" data-testid="pokemon-card">
+            <img src={pokemon.image} alt={pokemon.name} className="card-img" data-testid="pokemon-image" />
+            <h3 className="card-title" data-testid="pokemon-name">{pokemon.name}</h3>
             <button
                 className={`card-button ${fav ? 'favorited' : ''}`}
                 onClick={() => toggleFavorite(pokemon)}
                 aria-pressed={fav}
+                data-testid="pokemon-button"
             >
                 {fav ? 'Remove from favorites' : 'Add to favorites'}
             </button>

@@ -44,7 +44,7 @@ export default function PokemonGrid({ pokemons, loading = false }: Props) {
                 </span>
             </div>
 
-            <div className="pokemon-grid">
+            <div className="pokemon-grid" data-testid="pokemon-grid">
                 {pokemons.map((pokemon) => (
                     <PokemonCard key={pokemon.id} pokemon={pokemon} />
                 ))}
