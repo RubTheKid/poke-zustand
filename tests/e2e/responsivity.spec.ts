@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('design resposivity', () => {
-    test.only('should have mobile layout', async ({ page }) => {
+    test('should have mobile layout', async ({ page }) => {
         await page.setViewportSize({ width: 375, height: 667 });
         await page.goto('/');
 
