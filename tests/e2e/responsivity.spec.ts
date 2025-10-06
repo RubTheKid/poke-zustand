@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import { clickFirstFavoriteButton, gotoHome, mobileLayout, verifyFavoritesCount, verifyFirstFavoriteButton, verifyFirstPokemonCard, verifyLoading, verifyPokemonGrid, verifyTitleSubtitle } from './support/pokemon.helpers';
 
 test.describe('design resposivity', () => {
