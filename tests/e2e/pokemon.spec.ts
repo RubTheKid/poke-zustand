@@ -1,40 +1,24 @@
 import { test, expect } from '@playwright/test'
+import { clickFirstFavoriteButton, gotoHome, verifyAndPressTryAgain, verifyError, verifyErrorMessage, verifyFavoritesCount, verifyFirstFavoriteButton, verifyFirstPokemonCard, verifyTitleSubtitle } from './support/pokemon.helpers';
 
 test.describe('Pokemon App', () => {
     test('should load the pokemon list and display the favorites', async ({ page }) => {
-        //arrange: navega para a pagina inicial
-        await page.goto('/');
-
-        // assert: titulo e subtitulo estao presentes
-        await expect(page.getByText('PokéDex')).toBeVisible();
-        await expect(page.getByText('Gotta catch \'em all!')).toBeVisible()
-
-        // assert: botão de favorito esta presente
-        await expect(page.locator('.card-button').first()).toBeVisible()
-
-        // assert: card do primeiro pokemon esta presente
-        const pokemonCards = page.locator('.card')
-        await expect(pokemonCards.first()).toBeVisible()
-
+        await gotoHome(page);
+        await verifyTitleSubtitle(page)
+        await verifyFirstFavoriteButton(page)
+        await verifyFirstPokemonCard(page)
     })
 })
 
 test.describe('Favorites Manageing', () => {
     test('should add and remove pokemon from favorites', async ({ page }) => {
-        //arrange: navega para a pagina inicial
-        await page.goto('/')
-
-        // assert: contador de favoritos esta presente
-        await expect(page.getByText('Favorites: 0')).toBeVisible()
-
-        // act: clica no botão de favorito do primeiro pokemon
-        const firstFavoriteButton = page.locator('.card-button').first();
-        await firstFavoriteButton.click();
+        await gotoHome(page);
+        await verifyFavoritesCount(page)
+        await clickFirstFavoriteButton(page)
 
         // assert: contador de favoritos esta presente
         await expect(page.getByText('Favorites: 1')).toBeVisible()
-        // act: clica no botão de favorito do primeiro pokemon
-        await firstFavoriteButton.click();
+        await clickFirstFavoriteButton(page)
 
         // assert: contador de favoritos esta presente
         await expect(page.getByText('Favorites: 0')).toBeVisible()
@@ -52,19 +36,12 @@ test.describe('Should handle error state', () => {
             });
         });
 
-        //arrange: navega para a pagina inicial
-        await page.goto('/')
+        await gotoHome(page)
 
-        // assert: mensagem de erro esta presente
-        await expect(page.getByText('Oops! Something went wrong')).toBeVisible()
+        await verifyErrorMessage(page)
 
-        // assert: mensagem de erro esta presente
-        await expect(page.locator('.error-message p')).toHaveText(/Request failed/i)
+        await verifyError(page)
 
-        // assert: botão de try again esta presente
-        await expect(page.getByRole('button', { name: 'Try Again' })).toBeVisible()
-
-        // act: clica no botão de try again
-        await page.getByRole('button', { name: 'Try Again' }).click()
+        await verifyAndPressTryAgain(page)
     })
 })
