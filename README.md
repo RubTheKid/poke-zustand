@@ -6,3 +6,4 @@ A simple Pokemon collection app built with React + TypeScript + Zustand.
 - React 19 + TypeScript
 - Zustand (state management)
 - Vitest (testing)
+- Playwright (testing, e2e)
